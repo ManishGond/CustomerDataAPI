@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Customer Field</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh; 
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px; 
+        }
+
+        .left-field,
+        .right-field {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            width: 400px;
+            border-radius: 1;
+            flex-direction: column;
+        }
+
+        .left-field label,
+        .right-field label {
+            text-align: left;
+            
+        }
+
+        .left-field input,
+        .right-field input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .form-group label {
+            flex: 2;
+            text-align: right;
+            
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+
+        button {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center; 
+            margin-left: 400px;
+            margin-bottom: 10px;
+            font-weight: bold; 
+        }
+
+        .uuid-display {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Update Customer Field</h2>
+
+    <div class="centered-form">
+        <form id="updateCustomerForm">
+            <div class="form-group">
+                <div class="left-field">
+                    <label for="first_name"></label>
+                    <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
+                    <label for="email"></label>
+                    <input type="email" id="email" name="email" placeholder="Email">
+                    <label for="street"></label>
+                    <input type="text" id="street" name="street" placeholder="Street">
+                    <label for="city"></label>
+                    <input type="text" id="city" name="city" placeholder="City">
+                </div>
+                <div class="right-field">
+                    <label for="last_name"></label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
+                    <label for="phone"></label>
+                    <input type="tel" id="phone" name="phone" placeholder="Phone">
+                    <label for="address"></label>
+                    <input type="text" id="address" name="address" placeholder="Address">
+                    <label for="state"></label>
+                    <input type="text" id="state" name="state" placeholder="State">
+                </div>
+            </div>
+            <button type="button" onclick="updateCustomer()">Update Customer</button>
+        </form>
+    </div>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const uuid = urlParams.get('uuid'); 
+        const uuidDisplay = document.createElement("p");
+        uuidDisplay.textContent = `UUID: ${uuid}`;
+        uuidDisplay.classList.add("uuid-display");
+        document.body.appendChild(uuidDisplay);
+
+        async function populateFormWithCustomerData() {
+            const proxyUrl = 'https://corsproxy.io/?';
+            const apiUrl = 'https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp';
+            const bearerToken = 'dGVzdEBzdW5iYXNlZGF0YS5jb206VGVzdEAxMjM=';
+
+            const params = new URLSearchParams({ cmd: 'get_customer_list' });
+
+            try {
+                const response = await fetch(proxyUrl + apiUrl + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${bearerToken}`,
+                        "x-requested-with": "XMLHttpRequest",
+                    },
+                });
+
+                if (response.status === 200) {
+                    const data = await response.json();
+                    const targetUuid = uuid;
+                    const customerData = data.find(customer => customer.uuid === targetUuid);
+
+                    if (customerData) {
+                        document.getElementById("first_name").value = customerData.first_name;
+                        document.getElementById("last_name").value = customerData.last_name;
+                        document.getElementById("street").value = customerData.street;
+                        document.getElementById("address").value = customerData.address;
+                        document.getElementById("city").value = customerData.city;
+                        document.getElementById("state").value = customerData.state;
+                        document.getElementById("email").value = customerData.email;
+                        document.getElementById("phone").value = customerData.phone;
+                    } else {
+                        alert(`Customer with UUID ${targetUuid} not found.`);
+                    }
+                } else {
+                    throw new Error(`Failed to get customer data. Status: ${response.status}`);
+                }
+            } catch (error) {
+                alert("Failed to get customer data: " + error.message);
+            }
+        }
+
+
+        window.addEventListener("load", populateFormWithCustomerData);
+        async function updateCustomer() {
+            
+            const proxyUrl = 'https://corsproxy.io/?';
+            const apiUrl = 'https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp';
+            const bearerToken = 'dGVzdEBzdW5iYXNlZGF0YS5jb206VGVzdEAxMjM=';
+
+            const params = new URLSearchParams({ cmd: 'update', uuid: uuid });
+            
+            const updatedCustomerData = {
+                first_name: document.getElementById("first_name").value,
+                last_name: document.getElementById("last_name").value,
+                street: document.getElementById("street").value,
+                address: document.getElementById("address").value,
+                city: document.getElementById("city").value,
+                state: document.getElementById("state").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+            };
+
+            await fetch(proxyUrl + apiUrl + '?' + params.toString(), {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${bearerToken}`,
+                    "x-requested-with": "XMLHttpRequest", 
+                },
+                body: JSON.stringify(updatedCustomerData),
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    alert('Customer data updated successfully.');
+                    window.location.href = 'home.html';
+                } else if (response.status === 500) {
+                    alert('UUID not found.');
+                } else if (response.status === 400) {
+                    alert('Request body is empty.');
+                } else {
+                    alert('Failed to update customer data. Status: ' + response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        }
+    </script>
+</body>
+</html>

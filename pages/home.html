@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <title>Customer List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        #createCustomerButton {
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 20%;
+        font-size: 17px;
+        width: 90px;
+        height: 40px;
+        font-weight: bold;
+        line-height: 1;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        left: 135px;
+        }
+        #logoutButton {
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 20%;
+        font-size: 17px;
+        width: 90px;
+        height: 40px;
+        font-weight: bold;
+        line-height: 1;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 135px;
+        }
+
+    #createCustomerButton:hover {
+        background-color: #0056b3;
+    }
+
+    #logoutButton:hover{
+        background-color: #0056b3;
+    }
+    </style>
+</head>
+<body>
+    <!-- Customer List -->
+    <h2>Customer List</h2>
+
+    <button id="createCustomerButton"> Create +</button>
+    <button id="logoutButton"> LOGOUT </button>
+
+    <table id="customerList">
+        <tr>
+            
+        </tr>
+        
+    </table>
+
+    <script src="../main.js"></script>\
+
+    <script>
+        window.addEventListener("load", getCustomerList);
+    </script>
+
+    <script>
+        const createCustomerButton = document.getElementById("createCustomerButton");
+        createCustomerButton.addEventListener("click", function() {
+            window.location.href = "customer_create.html";
+        });
+
+        const logoutButton = document.getElementById("logoutButton");
+        logoutButton.addEventListener("click", function(){
+            window.location.href = "../index.html";
+        });
+    </script>
+</body>
+</html>

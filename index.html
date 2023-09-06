@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 50px;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        button {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the SubBaseData Customer Database</h1>
+
+    <script>
+        document.write("<h2>Login to Account</h2>");
+        document.write('<button onclick="redirectToLogin()">Login</button>');
+    
+
+        function redirectToLogin() {
+            window.location.href = "pages/login.html";
+        }
+    </script>
+</body>
+</html>
